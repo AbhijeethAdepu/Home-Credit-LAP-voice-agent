@@ -1,28 +1,49 @@
 # Voice Agent Platform
 
- 
-Credit Loan Against Property (LAP) qualification
+## Platform Used: Retell AI
 
-Voice platform: Retell AI
+**Retell AI** was used to build and test the Home Credit Loan Against Property (LAP) voice agent. It enables AI-powered voice conversations with customers and supports testing conversational flows for preliminary loan eligibility screening.
 
-Agent name: Home Credit LAP Qualification Agent 
+## Purpose
 
+The voice agent is designed to contact customers, explain the Home Credit LAP offer, collect eligibility information, identify disqualifying conditions, and route eligible customers to a senior loan expert.
 
-Workflow automation: n8n Cloud
+## Key Capabilities Used
 
-Call result logging: Google Sheets
+- **AI Voice Conversations:** Conducts natural, interactive conversations with customers.
+- **Customer Verification:** Verifies that the agent is speaking to the intended customer.
+- **Availability Check:** Determines whether the customer can talk and handles callback requests.
+- **Eligibility Screening:** Collects property, ownership, document, loan amount, occupation, income, market value, and tenure details.
+- **Existing Loan Detection:** Identifies existing property loans, EMI reduction requests, and loan-transfer cases for specialist handling.
+- **Eligibility Decisions:** Applies the defined screening rules and disqualifies customers when mandatory criteria fail.
+- **Expert Handoff:** Routes eligible customers to a senior loan expert for further assessment.
+- **Scenario Testing:** Tests eligible cases, disqualifications, ambiguous responses, contradictory answers, and out-of-order information.
 
-Purpose: The voice agent verifies the intended customer, checks availability, explains the LAP offer, detects existing-loan or EMI-transfer requests, collects the seven eligibility checklist items, applies the eligibility rules, and routes qualified customers to a senior loan expert.
+## Eligibility Rules Implemented
 
-Evidence provided:
-- System prompt
-- Test scenario descriptions
-- Call recordings
-- Call transcripts
-- Call log and test results
+1. Accepted property types: residential, commercial, and industrial.
+2. Agricultural property is not eligible.
+3. Sole and joint property ownership are accepted.
+4. Original property documents must be available for verification.
+5. Maximum requested loan amount: ₹75 lakh.
+6. Salaried and self-employed customers are accepted.
+7. Income must be received through a bank; cash-only income is disqualified.
+8. Accepted loan tenure: 3 to 15 years.
+9. Existing loan, EMI reduction, or loan-transfer cases are identified for specialist handling.
 
-Recording source: Retell AI call history
+## Testing and Integration
 
-Automation and logging source: n8n Cloud workflow and Google Sheets.
+The voice agent was tested using multiple customer scenarios. Audio recordings and transcripts were maintained as test evidence.
 
- 
+An n8n automation workflow named **Home Credit LAP - Retell Results** processes call-result events, extracts relevant information, evaluates transcripts, and records results in Google Sheets.
+
+## Project Limitations
+
+- The voice agent performs preliminary eligibility screening, not final loan approval.
+- Speech recognition errors and ambiguous customer responses may require manual review.
+- Final eligibility, loan terms, and approval are subject to assessment by the authorized loan expert.
+- API credentials, webhook secrets, and customer-sensitive information must not be included in the public repository.
+
+## Outcome
+
+The project demonstrates the use of conversational AI and workflow automation to streamline preliminary LAP eligibility screening, identify important customer cases, and maintain structured test records.
