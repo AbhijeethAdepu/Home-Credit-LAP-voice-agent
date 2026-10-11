@@ -217,18 +217,16 @@ Detailed results, notes, and transcripts are in `test-results/` and the evidence
 ## Repository Structure
 
 ```text
-home-credit-lap-voice-agent/
+Home-Credit-LAP-voice-agent/
 ├── README.md
-├── system-prompt/
-│   ├── global-prompt.md
-│   └── welcome-node-prompt.md
-├── evaluator/
-│   └── evaluator_v4.py
-├── test-scenarios/
-│   └── lap-test-call-scripts.md
-├── test-results/
-└── workflows/
-    └── home-credit-lap-retell-results.json
+├── .gitignore
+├── System_Prompt/            # Global Prompt and Welcome Node Prompt
+├── Voice_Agent_platform/     # Platform and agent configuration summary
+├── Workflow/                 # n8n workflow export and evaluation logic
+├── Test_Scenarios/           # Written call scripts for each test case
+├── Call_Recordings/          # Audio recordings of the test calls
+├── Transcripts/              # Transcripts of the test calls
+└── Brief_Test_Results/       # Summary of test outcomes
 ```
 
 ## Limitations
