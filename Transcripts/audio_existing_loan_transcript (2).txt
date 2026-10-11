@@ -1,0 +1,11 @@
+agent: Hello, may I speak with Abhijeeth?
+user: Yes. 
+agent: This is Monika from Home Credit. Is this a good time to speak for two minutes?
+user: Yes. You may. 
+agent: As an existing customer, you have a special Loan Against Property offer of up to seventy-five lakh rupees. This is a preliminary check only; what type of property is it?
+user: It is a residential property. 
+agent: Is it in your sole name, or jointly owned?
+user: Actually, I have a loan against it in another bank. I would like to transfer it to your bank. 
+agent: Thank you for letting me know. Since there's already a loan on this property, our loan-transfer specialist is the right person to help and will contact you shortly. Thank you for your time.
+user: Thank you. 
+agent: You're welcome. Have a good day.

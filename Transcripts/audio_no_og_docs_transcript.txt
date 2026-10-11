@@ -1,0 +1,14 @@
+agent: Hello, may I speak with Abhijeeth?
+user: Yes. 
+agent: Thank you for confirming. This is Monika from Home Credit. Is this a good time to speak for two minutes?
+user: Yeah. Yeah. Sure. 
+agent: As an existing customer, you have a special Loan Against Property offer of up to seventy-five lakh rupees. May I ask you a few brief questions to check your preliminary eligibility?
+user: Okay. Okay. 
+agent: What type of property is it?
+user: I have a commercial space the city. 
+agent: Is it in your sole name, or jointly owned?
+user: Yeah. It is in my sole name. 
+agent: Are the original property documents available for verification?
+user: No. I have photocopies 
+agent: I'm sorry, but original property documents are required for verification, so you do not meet the criteria for this offer at this time, and thank you for your time.
+user: k. 

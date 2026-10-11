@@ -1,0 +1,11 @@
+agent: Hello, may I speak with Abhijeeth?
+user: Yeah. Is this 
+agent: Please 
+user: Who is this? 
+agent: This is Monika from Home Credit, calling regarding a special offer for our customers. Am I speaking with Abhijeeth?
+user: Yes. You are. 
+agent: Thank you for confirming. This is Monika from Home Credit. Is this a good time to speak for two minutes?
+user: No. No. No. I'm busy. 
+agent: Understood. What time would be convenient for us to call you back?
+user: Tomorrow, eleven AM. 
+agent: I have recorded that as your preferred time, and thank you for your time.

@@ -1,0 +1,28 @@
+# Voice Agent Platform
+
+ 
+Credit Loan Against Property (LAP) qualification
+
+Voice platform: Retell AI
+
+Agent name: Home Credit LAP Qualification Agent 
+
+
+Workflow automation: n8n Cloud
+
+Call result logging: Google Sheets
+
+Purpose: The voice agent verifies the intended customer, checks availability, explains the LAP offer, detects existing-loan or EMI-transfer requests, collects the seven eligibility checklist items, applies the eligibility rules, and routes qualified customers to a senior loan expert.
+
+Evidence provided:
+- System prompt
+- Test scenario descriptions
+- Call recordings
+- Call transcripts
+- Call log and test results
+
+Recording source: Retell AI call history
+
+Automation and logging source: n8n Cloud workflow and Google Sheets.
+
+ 

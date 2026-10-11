@@ -1,0 +1,351 @@
+{
+  "name": "Home Credit LAP - Retell Results",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "retell-lap-events",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2a4a9252-c6d8-4b77-aa5a-42d97ce56cde",
+      "name": "Webhook",
+      "webhookId": "78aa680a-7140-425d-9ce6-9f8846fd9f95"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "60a125c1-2f26-4b53-a106-292bdf095a03",
+              "leftValue": "={{ $json.body.call.transcript }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "63cf7148-c667-4d27-95f3-a6a6c8d1f442",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de52f867-32cd-4084-87b1-209cb5e1ef5a",
+              "name": "call_id",
+              "value": "={{ $json.body.call.call_id }}",
+              "type": "string"
+            },
+            {
+              "id": "d7d7c9df-191f-4f33-a7dd-67e592dfc64e",
+              "name": "=transcript",
+              "value": "={{ $json.body.call.transcript }}",
+              "type": "string"
+            },
+            {
+              "id": "846de6da-73dc-400c-906c-e37e955fef63",
+              "name": "=call_status",
+              "value": "={{ $json.body.call.call_status }}",
+              "type": "string"
+            },
+            {
+              "id": "a2b299a5-824c-4808-a4ac-d62c9adc5401",
+              "name": "=call_summary",
+              "value": "={{ $json.body.call.call_analysis.call_summary }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "128bb600-dfdd-4b1b-b018-2c90a3e171e2",
+      "name": "Extract Call Data"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "items = _items\nresults = []\n\nLIMIT = 7500000  # Rs 75 lakh maximum offer\n\nCUSTOMER_ROLES = (\"user\", \"customer\", \"human\", \"caller\", \"client\")\nAGENT_ROLES = (\"agent\", \"assistant\", \"ai\", \"bot\")\nALL_ROLES = CUSTOMER_ROLES + AGENT_ROLES\n\nUNITS = {\n    \"zero\": 0, \"one\": 1, \"two\": 2, \"three\": 3, \"four\": 4, \"five\": 5,\n    \"six\": 6, \"seven\": 7, \"eight\": 8, \"nine\": 9, \"ten\": 10,\n    \"eleven\": 11, \"twelve\": 12, \"thirteen\": 13, \"fourteen\": 14,\n    \"fifteen\": 15, \"sixteen\": 16, \"seventeen\": 17, \"eighteen\": 18,\n    \"nineteen\": 19,\n}\nTENS = {\n    \"twenty\": 20, \"thirty\": 30, \"forty\": 40, \"fifty\": 50,\n    \"sixty\": 60, \"seventy\": 70, \"eighty\": 80, \"ninety\": 90,\n}\nMULTS = {\n    \"thousand\": 1000, \"k\": 1000,\n    \"lakh\": 100000, \"lakhs\": 100000, \"lac\": 100000, \"lacs\": 100000, \"l\": 100000,\n    \"crore\": 10000000, \"crores\": 10000000, \"cr\": 10000000,\n}\nCURRENCY = (\"rupees\", \"rupee\", \"rs\", \"inr\", \"\\u20b9\")\nYEAR_UNITS = (\"year\", \"years\", \"yr\", \"yrs\", \"saal\", \"sal\")\nMONTH_UNITS = (\"month\", \"months\", \"mahine\")\nNEGATORS = (\n    \"no\", \"not\", \"non\", \"never\", \"without\", \"nahi\", \"nahin\", \"don't\", \"dont\",\n    \"doesn't\", \"doesnt\", \"didn't\", \"didnt\", \"haven't\", \"havent\", \"isn't\",\n    \"isnt\", \"cannot\", \"can't\", \"cant\", \"won't\",\n)\nBOUNDARY_WORDS = (\"and\", \"but\", \"against\", \"while\", \"whereas\", \"although\",\n                  \"though\", \"however\", \"also\")\n\nVALUE_CUES = (\"worth\", \"value\", \"valued\", \"valuation\", \"market\", \"price\",\n              \"priced\", \"cost\", \"costs\")\nLOAN_CUES = (\"loan\", \"loans\", \"need\", \"needs\", \"require\", \"required\",\n             \"borrow\", \"borrowing\", \"looking\", \"want\", \"wanted\", \"wish\",\n             \"apply\", \"applying\", \"amount\", \"finance\", \"funds\", \"fund\",\n             \"lend\", \"much\")\nPROPERTY_NOUNS = (\"house\", \"property\", \"flat\", \"plot\", \"shop\", \"building\",\n                  \"apartment\", \"land\", \"home\", \"office\", \"godown\",\n                  \"warehouse\", \"villa\", \"bungalow\", \"factory\")\n\nYES_PHRASES = [\"yes\", \"yeah\", \"yep\", \"yup\", \"sure\", \"okay\", \"ok\", \"fine\",\n               \"proceed\", \"agree\", \"accept\", \"haan\", \"han\", \"ji\", \"theek hai\",\n               \"thik hai\", \"definitely\", \"absolutely\", \"alright\", \"go ahead\",\n               \"that works\", \"works for me\", \"i will take it\", \"i'll take it\",\n               \"sounds good\", \"happy with that\", \"correct\", \"of course\"]\nNO_PHRASES = [\"no\", \"nope\", \"nahi\", \"nahin\", \"not\", \"don't\", \"dont\", \"do not\",\n              \"won't\", \"cannot\", \"can't\", \"decline\", \"refuse\", \"too low\",\n              \"not enough\", \"need more\"]\nOKAY_NEGATIVES = [\"no problem\", \"not a problem\", \"no issue\", \"no issues\",\n                  \"no worries\", \"don't mind\", \"dont mind\", \"do not mind\"]\n\nDOC_WORDS = (\"original\", \"originals\", \"document\", \"documents\", \"docs\",\n             \"papers\", \"paper\", \"deed\", \"deeds\", \"registry\")\nCOPY_WORDS = [\"photocopy\", \"photocopies\", \"xerox\", \"copies\", \"copy\", \"scanned\",\n              \"lost\", \"misplaced\", \"unavailable\", \"missing\"]\nDOC_NEG_PHRASES = [\"with the bank\", \"with bank\", \"pledged\", \"mortgaged\",\n                   \"with the lender\", \"with my bank\"]\nDOC_AVAIL = [\"have\", \"has\", \"got\", \"available\", \"with me\", \"at home\", \"safe\",\n             \"ready\", \"kept\", \"keep\", \"hold\", \"yes\", \"yeah\", \"yep\", \"sure\"]\nDOC_HEDGES = [\"probably\", \"maybe\", \"i think\", \"somewhere\", \"not sure\", \"might\",\n              \"perhaps\", \"not certain\", \"let me check\", \"i will check\",\n              \"i'll check\", \"should be\", \"could be\", \"possibly\"]\n\nTENURE_EXCLUDE = (\"old\", \"experience\", \"since\", \"ago\", \"living\", \"staying\",\n                  \"stay\", \"stayed\", \"built\", \"constructed\", \"aged\", \"working\",\n                  \"worked\", \"serving\", \"past\", \"last\")\nTENURE_CUES = (\"tenure\", \"tenor\", \"repay\", \"repayment\", \"period\", \"term\",\n               \"duration\", \"emi\", \"emis\", \"installment\", \"installments\",\n               \"loan\", \"prefer\", \"preferably\", \"want\", \"need\", \"take\",\n               \"like\", \"over\", \"within\", \"payback\")\nCORRECTION_CUES = [\"actually\", \"make that\", \"i mean\", \"sorry\", \"instead\",\n                   \"rather\", \"no wait\", \"change it to\", \"change that to\",\n                   \"make it\"]\n\nNEG_LOAN = [\n    \"no existing loan\", \"no existing loans\", \"no loan\", \"no loans\",\n    \"no other loan\", \"no current loan\", \"no outstanding loan\", \"no emi\",\n    \"don't have any loan\", \"don't have a loan\", \"don't have any loans\",\n    \"don't have any existing loan\", \"don't have an existing loan\",\n    \"dont have any loan\", \"dont have a loan\", \"dont have any existing loan\",\n    \"do not have any loan\", \"do not have a loan\", \"do not have any loans\",\n    \"do not have any existing loan\", \"do not have an existing loan\",\n    \"not have any loan\", \"not have a loan\", \"not have an existing loan\",\n    \"never taken a loan\", \"never taken any loan\", \"didn't take any loan\",\n]\nLOAN_PHRASES = [\n    \"existing loan\", \"existing loans\", \"already have a loan\",\n    \"already have an existing loan\", \"already have loan\",\n    \"already taken a loan\", \"already took a loan\", \"i have a loan on\",\n    \"i have a loan against\", \"i have a home loan\", \"i have a mortgage\",\n    \"i have an emi\", \"running loan\", \"outstanding loan\", \"current loan\",\n    \"reduce my emi\", \"reduce emi\", \"reduce the emi\", \"lower my emi\",\n    \"lower the emi\", \"lower emi\", \"emi is too high\", \"emi is high\",\n    \"current emi\", \"existing emi\", \"loan transfer\", \"transfer my loan\",\n    \"transfer the loan\", \"balance transfer\", \"top up\", \"topup\", \"refinance\",\n    \"paying emi\", \"paying an emi\",\n]\nLOAN_QUESTION_PHRASES = [\"existing loan\", \"already have a loan\", \"any loan\",\n                         \"loan on this property\", \"loan on the property\",\n                         \"running loan\", \"current loan\", \"existing emi\"]\n\n\n# ---------------------------------------------------------------\n# Tokenising helpers (no imports: plain string operations only)\n# ---------------------------------------------------------------\n\ndef clean(text):\n    text = str(text).lower()\n    for a, b in ((\"\\u2019\", \"'\"), (\"\\u2018\", \"'\"), (\"\\u201c\", '\"'),\n                 (\"\\u201d\", '\"'), (\"\\u2014\", \" , \"), (\"\\u2013\", \" , \"),\n                 (\"rs.\", \"rs \")):\n        text = text.replace(a, b)\n    out = []\n    n = len(text)\n    for i in range(n):\n        ch = text[i]\n        # digit grouping: 75,00,000 -> 7500000\n        if ch == \",\" and 0 < i < n - 1 and text[i - 1].isdigit() and text[i + 1].isdigit():\n            continue\n        out.append(ch)\n    return \"\".join(out)\n\n\ndef tokenize(text):\n    \"\"\"Lower-case word tokens. '|' marks a sentence/clause boundary.\"\"\"\n    text = clean(text)\n    chars = []\n    n = len(text)\n    for i in range(n):\n        ch = text[i]\n        if ch.isalnum() or ch == \"'\":\n            if ch.isalpha() and chars and chars[-1][-1:].isdigit():\n                chars.append(\" \")  # 10yrs -> 10 yrs\n            chars.append(ch)\n        elif ch == \".\" and 0 < i < n - 1 and text[i - 1].isdigit() and text[i + 1].isdigit():\n            chars.append(ch)  # decimal point\n        elif ch in \".,;?!:\":\n            chars.append(\" | \")\n        elif ch == \"\\u20b9\":\n            chars.append(\" \\u20b9 \")\n        else:\n            chars.append(\" \")\n    toks = \"\".join(chars).split()\n    merged = []\n    i = 0\n    while i < len(toks):\n        if toks[i] == \"self\" and i + 1 < len(toks) and toks[i + 1] in (\"employed\", \"employment\"):\n            merged.append(\"selfemployed\")\n            i += 2\n        else:\n            merged.append(toks[i])\n            i += 1\n    return merged\n\n\ndef negated(tokens, i, span=3):\n    k = i - 1\n    stop = max(-1, i - span - 1)\n    while k > stop:\n        if tokens[k] == \"|\":\n            return False\n        if tokens[k] in NEGATORS:\n            return True\n        k -= 1\n    return False\n\n\ndef last_pos(tokens, phrases, check_neg=True):\n    best = -1\n    for ph in phrases:\n        p = ph.split()\n        m = len(p)\n        for i in range(len(tokens) - m + 1):\n            if tokens[i:i + m] == p:\n                if check_neg and negated(tokens, i):\n                    continue\n                if i + m - 1 > best:\n                    best = i + m - 1\n    return best\n\n\ndef any_phrase(tokens, phrases):\n    return last_pos(tokens, phrases, False) >= 0\n\n\ndef mask_phrase(tokens, phrase):\n    p = phrase.split()\n    m = len(p)\n    for i in range(len(tokens) - m + 1):\n        if tokens[i:i + m] == p:\n            for k in range(i, i + m):\n                tokens[k] = \"_\"\n\n\ndef split_clauses(tokens):\n    clauses = []\n    cur = []\n    for t in tokens:\n        if t == \"|\" or t in BOUNDARY_WORDS:\n            if cur:\n                clauses.append(cur)\n            cur = []\n        else:\n            cur.append(t)\n    if cur:\n        clauses.append(cur)\n    return clauses\n\n\ndef last_question(text):\n    q = text.rfind(\"?\")\n    if q == -1:\n        return text\n    start = max(text.rfind(\".\", 0, q), text.rfind(\"?\", 0, q), text.rfind(\"!\", 0, q)) + 1\n    return text[start:q]\n\n\n# ---------------------------------------------------------------\n# Transcript -> role-labelled turns (customer vs agent)\n# ---------------------------------------------------------------\n\ndef split_inline_labels(text):\n    \"\"\"Put a newline before a role label that appears mid-line.\"\"\"\n    low = text.lower()\n    out = []\n    for i in range(len(text)):\n        if i > 0 and text[i - 1] in \" \\t\":\n            for role in ALL_ROLES:\n                if low.startswith(role + \":\", i):\n                    out.append(\"\\n\")\n                    break\n        out.append(text[i])\n    return \"\".join(out)\n\n\ndef parse_turns(transcript):\n    turns = []\n    text = split_inline_labels(transcript.replace(\"\\r\\n\", \"\\n\").replace(\"\\r\", \"\\n\"))\n    for line in text.split(\"\\n\"):\n        stripped = line.strip()\n        if not stripped:\n            continue\n        lower = stripped.lower()\n        role = None\n        content = stripped\n        for r in ALL_ROLES:\n            tag = r + \":\"\n            if lower.startswith(tag):\n                role = \"customer\" if r in CUSTOMER_ROLES else \"agent\"\n                content = stripped[len(tag):].strip()\n                break\n        if role is None:\n            # continuation of the previous turn; text before the first label is ignored\n            if turns:\n                turns[-1][\"text\"] = (turns[-1][\"text\"] + \" \" + stripped).strip()\n            continue\n        if turns and turns[-1][\"role\"] == role:\n            turns[-1][\"text\"] = (turns[-1][\"text\"] + \" \" + content).strip()\n        else:\n            turns.append({\"role\": role, \"text\": content})\n    return turns\n\n\n# ---------------------------------------------------------------\n# Numbers, amounts and tenure\n# ---------------------------------------------------------------\n\ndef is_number_token(t):\n    if not t or t.count(\".\") > 1:\n        return False\n    return t.replace(\".\", \"\", 1).isdigit()\n\n\ndef read_number(tokens, i):\n    \"\"\"Read a numeric or spoken number at tokens[i]. Returns (value, next_index, has_multiplier) or None.\"\"\"\n    n = len(tokens)\n    t = tokens[i]\n    if is_number_token(t):\n        value = float(t)\n        j = i + 1\n    elif t in UNITS or t in TENS or t == \"hundred\":\n        cur = 0\n        consumed = 0\n        k = i\n        while k < n:\n            w = tokens[k]\n            if w in UNITS:\n                cur += UNITS[w]\n            elif w in TENS:\n                cur += TENS[w]\n            elif w == \"hundred\":\n                cur = (cur if cur else 1) * 100\n            elif (w == \"and\" and consumed > 0 and k + 1 < n\n                  and (tokens[k + 1] in UNITS or tokens[k + 1] in TENS)):\n                pass\n            else:\n                break\n            consumed += 1\n            k += 1\n        value = float(cur)\n        j = k\n        if j + 1 < n and tokens[j] == \"point\" and tokens[j + 1] in UNITS and UNITS[tokens[j + 1]] < 10:\n            value += UNITS[tokens[j + 1]] / 10.0\n            j += 2\n    elif t in (\"a\", \"an\") and i + 1 < n and tokens[i + 1] in MULTS:\n        value = 1.0\n        j = i + 1\n    else:\n        return None\n    has_mult = False\n    if j < n and tokens[j] in MULTS:\n        value = value * MULTS[tokens[j]]\n        j += 1\n        has_mult = True\n    return value, j, has_mult\n\n\ndef find_amounts(clause):\n    \"\"\"Money amounts in a clause: needs a lakh/crore/thousand unit, a currency word, or >= 1,00,000.\"\"\"\n    found = []\n    n = len(clause)\n    i = 0\n    while i < n:\n        res = read_number(clause, i)\n        if res is None:\n            i += 1\n            continue\n        value, j, has_mult = res\n        has_cur = (i > 0 and clause[i - 1] in CURRENCY) or (j < n and clause[j] in CURRENCY)\n        if has_mult or has_cur or value >= 100000:\n            found.append((value, i, j))\n        i = max(j, i + 1)\n    return found\n\n\ndef classify_amount(clause, s, e, ctx):\n    \"\"\"Decide whether an amount is the LOAN request or the PROPERTY VALUE (or unknown).\"\"\"\n    nxt = []\n    k = e\n    while k < len(clause) and len(nxt) < 1:\n        if clause[k] not in CURRENCY:\n            nxt.append(clause[k])\n        k += 1\n    if nxt and nxt[0] in PROPERTY_NOUNS:\n        return \"value\"          # \"my 1.2 crore house\"\n    value_idx = [i for i, t in enumerate(clause) if t in VALUE_CUES]\n    loan_idx = [i for i, t in enumerate(clause) if t in LOAN_CUES]\n    if value_idx and not loan_idx:\n        return \"value\"\n    if loan_idx and not value_idx:\n        return \"loan\"\n    if value_idx and loan_idx:\n        before = ([(i, \"value\") for i in value_idx if i < s]\n                  + [(i, \"loan\") for i in loan_idx if i < s])\n        if before:\n            return max(before)[1]\n        after = ([(i, \"value\") for i in value_idx] + [(i, \"loan\") for i in loan_idx])\n        return min(after)[1]\n    # No cue words in the clause: fall back on what the agent just asked.\n    if any(t in VALUE_CUES for t in ctx):\n        return \"value\"\n    if any(t in LOAN_CUES for t in ctx):\n        return \"loan\"\n    return None\n\n\ndef tenure_from_clause(clause, tenure_ctx):\n    if any(t in TENURE_EXCLUDE for t in clause):\n        return None\n    if not (tenure_ctx or any(t in TENURE_CUES for t in clause)):\n        return None\n    cue_end = -1\n    for ph in CORRECTION_CUES:\n        p = ph.split()\n        m = len(p)\n        for i in range(len(clause) - m + 1):\n            if clause[i:i + m] == p:\n                cue_end = max(cue_end, i + m - 1)\n    cands = []\n    n = len(clause)\n    i = 0\n    while i < n:\n        res = read_number(clause, i)\n        if res is None:\n            i += 1\n            continue\n        value, j, has_mult = res\n        unit = clause[j] if j < n else \"\"\n        if not has_mult and unit in YEAR_UNITS:\n            cands.append((i, value))\n        elif not has_mult and unit in MONTH_UNITS:\n            cands.append((i, value / 12.0))\n        elif (not has_mult and cue_end >= 0 and i > cue_end\n              and 1 <= value <= 40 and unit not in CURRENCY):\n            cands.append((i, value))   # \"10 years... actually make that 12\"\n        i = max(j, i + 1)\n    if not cands:\n        return None\n    return max(cands)[1]\n\n\n# ---------------------------------------------------------------\n# Field detectors (each reads CUSTOMER tokens + the agent's last question)\n# ---------------------------------------------------------------\n\ndef detect_property(tokens, ctx):\n    asks_type = any_phrase(ctx, [\"type of property\", \"kind of property\",\n                                 \"property type\", \"what type\", \"what kind\",\n                                 \"which type\"])\n    vocab = {\n        \"agricultural\": [\"agricultural\", \"agriculture\", \"agri\", \"farmland\", \"farm land\"],\n        \"residential\": [\"residential\"],\n        \"commercial\": [\"commercial\"],\n        \"industrial\": [\"industrial\"],\n    }\n    if asks_type:\n        vocab[\"residential\"] += [\"house\", \"flat\", \"apartment\", \"villa\", \"bungalow\", \"home\", \"residence\"]\n        vocab[\"commercial\"] += [\"shop\", \"office\", \"showroom\"]\n        vocab[\"industrial\"] += [\"factory\", \"warehouse\", \"godown\"]\n    best = None\n    best_pos = -1\n    for kind in vocab:\n        p = last_pos(tokens, vocab[kind])\n        if p > best_pos:\n            best = kind\n            best_pos = p\n    return best\n\n\ndef detect_ownership(tokens, ctx):\n    own_ctx = any_phrase(ctx, [\"owned\", \"ownership\", \"owner\", \"sole\", \"joint\",\n                               \"jointly\", \"whose name\", \"your name\"])\n    mentions_prop = any_phrase(tokens, [\"property\", \"house\", \"flat\", \"plot\", \"land\",\n                                        \"apartment\", \"shop\", \"building\", \"home\",\n                                        \"villa\", \"office\"])\n    own_words = any_phrase(tokens, [\"own\", \"owned\", \"owner\", \"owners\", \"ownership\"])\n    sole = [\"sole\", \"solely\", \"only owner\", \"single owner\"]\n    joint = [\"joint\", \"jointly\", \"co owned\", \"co owner\", \"co owners\", \"coowned\"]\n    if own_ctx or mentions_prop:\n        sole += [\"i own\", \"my own\", \"owned by me\", \"in my name\", \"i am the owner\",\n                 \"i'm the owner\"]\n    if own_ctx or own_words:\n        sole += [\"only me\", \"just me\", \"myself\"]\n        joint += [\"with my wife\", \"with my husband\", \"with my brother\",\n                  \"with my sister\", \"with my father\", \"with my mother\",\n                  \"with my son\", \"with my daughter\", \"with my partner\",\n                  \"our names\", \"both names\", \"my wife and i\", \"my husband and i\",\n                  \"shared\"]\n    s = last_pos(tokens, sole)\n    j = last_pos(tokens, joint)\n    if s < 0 and j < 0:\n        return None\n    return \"joint\" if j > s else \"sole\"\n\n\ndef detect_documents(tokens, ctx):\n    if any_phrase(tokens, DOC_HEDGES):\n        return None                      # ambiguous: never record it\n    docs_ctx = any_phrase(ctx, list(DOC_WORDS))\n    neg = last_pos(tokens, COPY_WORDS)   # un-negated \"photocopies\" etc.\n    pos = -1\n    for i, t in enumerate(tokens):\n        if t not in DOC_WORDS:\n            continue\n        s = i\n        while s > 0 and (tokens[s - 1] in DOC_WORDS or tokens[s - 1] == \"property\"):\n            s -= 1\n        if negated(tokens, s, 4):\n            neg = max(neg, i)\n        else:\n            pos = max(pos, i)\n    if (pos >= 0 or docs_ctx) and any_phrase(tokens, DOC_NEG_PHRASES):\n        neg = max(neg, 0)\n    if neg >= 0 and neg >= pos:\n        return False\n    if pos >= 0:\n        if docs_ctx or any_phrase(tokens, DOC_AVAIL):\n            return True\n        return None\n    if docs_ctx:\n        y = any_phrase(tokens, [\"yes\", \"yeah\", \"yep\", \"yup\", \"haan\", \"han\", \"ji\", \"sure\", \"of course\", \"definitely\", \"absolutely\"])\n        n_ = any_phrase(tokens, [\"no\", \"nope\", \"nahi\", \"nahin\", \"not\"])\n        if n_ and not y:\n            return False\n        if y and not n_:\n            return True\n    return None\n\n\ndef detect_occupation(tokens):\n    self_pos = last_pos(tokens, [\"selfemployed\", \"business\", \"businessman\", \"businesswoman\",\n                                 \"shop\", \"shopkeeper\", \"trader\", \"freelancer\", \"freelance\",\n                                 \"consultant\", \"contractor\", \"proprietor\", \"entrepreneur\"])\n    sal_pos = last_pos(tokens, [\"salaried\", \"salary\", \"job\", \"employee\", \"employed\",\n                                \"i work\", \"working in\", \"working for\", \"work in\", \"work for\"])\n    if self_pos < 0 and sal_pos < 0:\n        return None\n    return \"self_employed\" if self_pos > sal_pos else \"salaried\"\n\n\ndef detect_income(tokens, ctx):\n    income_words = [\"income\", \"salary\", \"earn\", \"earning\", \"earnings\", \"paid\",\n                    \"payment\", \"payments\", \"receive\", \"received\", \"receiving\",\n                    \"comes\", \"come\", \"credited\", \"credit\", \"profit\", \"profits\",\n                    \"revenue\", \"wages\", \"wage\", \"deposited\", \"business\", \"shop\"]\n    income_ctx = any_phrase(ctx, [\"income\", \"salary\", \"paid\", \"earn\", \"receive\"])\n    cue = income_ctx or any_phrase(tokens, income_words)\n    qualifier = any_phrase(tokens, [\"all\", \"only\", \"entirely\", \"mostly\", \"mainly\",\n                                    \"fully\", \"completely\", \"everything\"])\n    cash_pos = last_pos(tokens, [\"cash\"]) if (cue or qualifier) else -1\n    bank_pos = -1\n    if cue:\n        bank_pos = last_pos(tokens, [\"bank\", \"banks\", \"account\", \"neft\", \"imps\",\n                                     \"rtgs\", \"upi\", \"cheque\", \"deposited\", \"credited\"])\n    if cash_pos >= 0 and bank_pos >= 0:\n        return None                      # mixed / unclear\n    if cash_pos >= 0:\n        return \"cash\"\n    if bank_pos >= 0:\n        return \"bank\"\n    if cue and any_phrase(tokens, [\"cash\"]):\n        return \"bank\"                    # \"not in cash\" with nothing else\n    return None\n\n\ndef detect_transfer(tokens, ctx):\n    masked = list(tokens)\n    for p in NEG_LOAN:\n        mask_phrase(masked, p)\n    if any_phrase(masked, LOAN_PHRASES):\n        return True\n    if any_phrase(ctx, LOAN_QUESTION_PHRASES):\n        y = any_phrase(masked, [\"yes\", \"yeah\", \"yep\", \"haan\", \"han\"])\n        n_ = any_phrase(masked, [\"no\", \"nope\", \"nahi\", \"nahin\", \"not\"])\n        if y and not n_:\n            return True\n    return False\n\n\ndef yes_no(tokens):\n    masked = list(tokens)\n    for p in OKAY_NEGATIVES:\n        mask_phrase(masked, p)\n    y = last_pos(masked, YES_PHRASES)                 # negation-aware\n    n_ = last_pos(masked, NO_PHRASES, False)\n    if y < 0 and n_ < 0:\n        return None\n    return \"yes\" if y > n_ else \"no\"\n\n\ndef is_cap_offer(agent_text):\n    tokens = tokenize(agent_text)\n    mentions = any_phrase(tokens, [\"75 lakh\", \"75 lakhs\", \"75 lac\", \"75 lacs\",\n                                   \"seventy five lakh\", \"seventy five lakhs\",\n                                   \"seventy five lac\", \"seventy five lacs\",\n                                   \"7500000\", \"75 l\"])\n    asks = any_phrase(tokens, [\"proceed\", \"would you like\", \"do you want\",\n                               \"are you okay\", \"are you ok\", \"is that okay\",\n                               \"is that ok\", \"shall we\", \"go ahead\",\n                               \"are you comfortable\", \"would that work\",\n                               \"does that work\", \"interested in\", \"okay with\",\n                               \"ok with\"])\n    return mentions and asks\n\n\n# ---------------------------------------------------------------\n# Whole-transcript evaluation\n# ---------------------------------------------------------------\n\ndef evaluate(transcript):\n    state = {\n        \"error\": None, \"property_type\": None, \"ownership\": None,\n        \"documents\": None, \"occupation\": None, \"income\": None,\n        \"market_value\": None, \"requested\": None, \"decision\": None,\n        \"tenure\": None, \"transfer\": False,\n    }\n    turns = parse_turns(transcript)\n    if not turns:\n        state[\"error\"] = \"TRANSCRIPT_PARSE_ERROR\"\n        return state\n    if not any(t[\"role\"] == \"customer\" for t in turns):\n        state[\"error\"] = \"NO_CUSTOMER_UTTERANCES\"\n        return state\n\n    prev_agent = \"\"\n    cap_open = False\n    for turn in turns:\n        if turn[\"role\"] == \"agent\":\n            prev_agent = turn[\"text\"]\n            # A cap offer only counts AFTER the customer asked for more than the limit.\n            cap_open = (state[\"requested\"] is not None\n                        and state[\"requested\"] > LIMIT\n                        and is_cap_offer(prev_agent))\n            continue\n\n        # ---- customer turn: only the customer's own words are analysed ----\n        tokens = tokenize(turn[\"text\"])\n        ctx = tokenize(last_question(prev_agent))\n\n        if detect_transfer(tokens, ctx):\n            state[\"transfer\"] = True\n\n        p = detect_property(tokens, ctx)\n        if p:\n            state[\"property_type\"] = p\n        o = detect_ownership(tokens, ctx)\n        if o:\n            state[\"ownership\"] = o\n        d = detect_documents(tokens, ctx)\n        if d is not None:\n            state[\"documents\"] = d\n        occ = detect_occupation(tokens)\n        if occ:\n            state[\"occupation\"] = occ\n        inc = detect_income(tokens, ctx)\n        if inc:\n            state[\"income\"] = inc\n\n        loan_vals = []\n        tenure_ctx = any_phrase(ctx, [\"tenure\", \"tenor\", \"repay\", \"repayment\",\n                                      \"how many years\", \"how long\", \"period\",\n                                      \"duration\", \"term\"])\n        for clause in split_clauses(tokens):\n            for value, s, e in find_amounts(clause):\n                kind = classify_amount(clause, s, e, ctx)\n                if kind == \"loan\":\n                    loan_vals.append(value)\n                elif kind == \"value\":\n                    state[\"market_value\"] = value\n            t = tenure_from_clause(clause, tenure_ctx)\n            if t is not None:\n                state[\"tenure\"] = t\n        new_loan = loan_vals[-1] if loan_vals else None\n\n        if cap_open:\n            answer = yes_no(tokens)\n            if answer == \"no\":\n                if new_loan is not None and new_loan < LIMIT:\n                    state[\"requested\"] = new_loan\n                    state[\"decision\"] = None\n                else:\n                    state[\"decision\"] = \"rejected\"\n                    if new_loan is not None:\n                        state[\"requested\"] = new_loan\n            elif answer == \"yes\":\n                if new_loan is not None and new_loan != LIMIT:\n                    state[\"requested\"] = new_loan\n                    state[\"decision\"] = None\n                else:\n                    state[\"decision\"] = \"accepted\"\n            elif new_loan is not None:\n                state[\"requested\"] = new_loan\n                state[\"decision\"] = None\n        elif new_loan is not None:\n            state[\"requested\"] = new_loan\n            state[\"decision\"] = None\n        cap_open = False\n    return state\n\n\ndef dig(obj, *path):\n    cur = obj\n    for key in path:\n        if isinstance(cur, dict) and key in cur:\n            cur = cur[key]\n        else:\n            return None\n    return cur\n\n\ndef transcript_to_text(value):\n    if value is None:\n        return \"\"\n    if isinstance(value, list):\n        lines = []\n        for entry in value:\n            if isinstance(entry, dict):\n                role = str(entry.get(\"role\", \"\")).lower()\n                content = entry.get(\"content\") or entry.get(\"text\") or entry.get(\"message\") or \"\"\n                label = \"Agent\" if role in AGENT_ROLES else \"User\"\n                lines.append(label + \": \" + str(content))\n            else:\n                lines.append(str(entry))\n        return \"\\n\".join(lines)\n    return str(value)\n\n\ndef find_transcript(data):\n    candidates = [\n        data.get(\"transcript\"), data.get(\"transcrip\"),\n        dig(data, \"call\", \"transcript\"), dig(data, \"body\", \"call\", \"transcript\"),\n        data.get(\"transcript_object\"), dig(data, \"call\", \"transcript_object\"),\n        dig(data, \"body\", \"call\", \"transcript_object\"),\n    ]\n    for c in candidates:\n        if c:\n            return transcript_to_text(c)\n    return \"\"\n\n\nALL_ITEMS = [\"property_type\", \"ownership_status\", \"documents_available\",\n             \"loan_amount\", \"occupation_and_income_mode\", \"market_value\", \"tenure\"]\n\nfor item in items:\n    data = item.get(\"json\", {})\n    transcript = find_transcript(data)\n    st = evaluate(transcript) if transcript.strip() else {\"error\": \"EMPTY_TRANSCRIPT\"}\n\n    flags = []\n    missing_items = []\n\n    if st[\"error\"]:\n        flags.append(st[\"error\"])\n        missing_items = list(ALL_ITEMS)\n        status = \"INCOMPLETE\"\n    else:\n        requested = st[\"requested\"]\n        above = requested is not None and requested > LIMIT\n        decision = st[\"decision\"]\n\n        if st[\"property_type\"] == \"agricultural\":\n            flags.append(\"POSSIBLE_AGRICULTURAL_PROPERTY\")\n        if st[\"income\"] == \"cash\":\n            flags.append(\"POSSIBLE_CASH_INCOME\")\n        if st[\"documents\"] is False:\n            flags.append(\"POSSIBLE_DOCUMENTS_UNAVAILABLE\")\n        if st[\"transfer\"]:\n            flags.append(\"POSSIBLE_EXISTING_LOAN_OR_EMI_TRANSFER\")\n        if above and decision != \"accepted\":\n            flags.append(\"LOAN_AMOUNT_ABOVE_LIMIT\")\n        tenure = st[\"tenure\"]\n        if tenure is not None and not (3 <= tenure <= 15):\n            flags.append(\"TENURE_OUT_OF_RANGE\")\n\n        if st[\"property_type\"] is None:\n            missing_items.append(\"property_type\")\n        if st[\"ownership\"] is None:\n            missing_items.append(\"ownership_status\")\n        if st[\"documents\"] is None:\n            missing_items.append(\"documents_available\")\n        if requested is None:\n            missing_items.append(\"loan_amount\")\n        if st[\"occupation\"] is None or st[\"income\"] is None:\n            missing_items.append(\"occupation_and_income_mode\")\n        if st[\"market_value\"] is None:\n            missing_items.append(\"market_value\")\n        if tenure is None:\n            missing_items.append(\"tenure\")\n\n        disqualifying = [\"POSSIBLE_AGRICULTURAL_PROPERTY\", \"POSSIBLE_CASH_INCOME\",\n                         \"POSSIBLE_DOCUMENTS_UNAVAILABLE\", \"TENURE_OUT_OF_RANGE\"]\n        if st[\"transfer\"]:\n            status = \"TRANSFER_SPECIALIST_REQUIRED\"\n        elif any(f in flags for f in disqualifying):\n            status = \"DISQUALIFIED\"\n        elif above and decision == \"rejected\":\n            status = \"CUSTOMER_DECLINED\"\n        elif above and decision is None:\n            status = \"OFFER_MAXIMUM_75_LAKH\"\n        elif missing_items:\n            status = \"INCOMPLETE\"\n        else:\n            status = \"REVIEW_REQUIRED\"\n\n    result = dict(data)\n    if result.get(\"call_id\") is None:\n        result[\"call_id\"] = dig(data, \"call\", \"call_id\") or dig(data, \"body\", \"call\", \"call_id\") or \"\"\n    if result.get(\"transcript\") is None:\n        result[\"transcript\"] = transcript\n    if result.get(\"call_status\") is None:\n        result[\"call_status\"] = dig(data, \"call\", \"call_status\") or \"\"\n    if result.get(\"call_summary\") is None:\n        result[\"call_summary\"] = (dig(data, \"call\", \"call_analysis\", \"call_summary\") or \"\")\n    result[\"scenario\"] = data.get(\"scenario\") or \"manual_test\"\n    result[\"evaluation_status\"] = status\n    result[\"missing_items\"] = \", \".join(missing_items)\n    result[\"detected_flags\"] = \", \".join(dict.fromkeys(flags))\n    result[\"prompt_version\"] = data.get(\"prompt_version\") or \"v3\"\n    result[\"evaluated_at\"] = data.get(\"evaluated_at\", \"\")\n\n    results.append({\"json\": result})\n\nreturn results"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "8e0223d7-c496-43c1-89b1-6a11025bcb3e",
+      "name": "Evaluate Transcript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RqwTWuYUItLiOelYkK7ZTOZBToJmd91idc7fnm0IZno",
+          "mode": "list",
+          "cachedResultName": "Home Credit LAP Call Logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RqwTWuYUItLiOelYkK7ZTOZBToJmd91idc7fnm0IZno/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "call_logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RqwTWuYUItLiOelYkK7ZTOZBToJmd91idc7fnm0IZno/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evaluated_at": "={{ $json.evaluated_at }}",
+            "detected_flags": "={{ $json.detected_flags }}",
+            "missing_items": "={{ $json.missing_items }}",
+            "evaluation_status": "={{ $json.evaluation_status }}",
+            "scenario": "={{ $json.scenario }}",
+            "prompt_version": "={{ $json.prompt_version }}",
+            "call_id": "={{ $json.call_id }}",
+            "call_status": "={{ $json.call_status }}",
+            "transcript": "={{ $json.transcript }}",
+            "call_summary": "={{ $json.call_summary }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "call_id",
+              "displayName": "call_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "call_status",
+              "displayName": "call_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "call_summary",
+              "displayName": "call_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scenario",
+              "displayName": "scenario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "expected_outcome",
+              "displayName": "expected_outcome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "actual_outcome",
+              "displayName": "actual_outcome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "evaluation",
+              "displayName": "evaluation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prompt_version",
+              "displayName": "prompt_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "evaluation_status",
+              "displayName": "evaluation_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "missing_items",
+              "displayName": "missing_items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "detected_flags",
+              "displayName": "detected_flags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "evaluated_at",
+              "displayName": "evaluated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "15d47b06-f99b-49d1-8e53-15ceaa8228da",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WclL7RqJHPp9ZpOj",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Extract Call Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Call Data": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Transcript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e69fd116-bf6c-4260-abcf-941935f30958",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e7f8e25cac4913a28ae18369cc2fb4273f8bcee7c3d3d20b177afc65212ec03e"
+  },
+  "nodeGroups": [],
+  "id": "ABehbyL0VLg67KT0",
+  "tags": []
+}

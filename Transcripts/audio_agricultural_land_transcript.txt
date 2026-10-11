@@ -1,0 +1,11 @@
+agent: Hello, may I speak with Abhijeeth?
+user: Yes. Speaking. 
+agent: Thank you. This is Monika from Home Credit— is this a good time to speak for two minutes?
+user: Yeah. 
+agent: As a valued Home Credit customer, you may be eligible for a Loan Against Property of up to seventy-five lakh rupees. What type of property is it?
+user: Uh, I have a agriculture land, I think. 
+agent: Just to confirm, is the property agricultural land?
+user: Oh, yeah. It is agricultural land. 
+agent: Thank you for confirming. This offer doesn’t cover agricultural property, so you don’t meet the criteria for this specific offer. Thank you for your time, and have a good day.
+user: Okay. 
+agent: Thank you.

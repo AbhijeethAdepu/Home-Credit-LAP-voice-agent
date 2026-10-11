@@ -1,0 +1,8 @@
+agent: Hello, may I speak with Abhijeeth?
+user: Yes. Speaking. 
+agent: Thank you for confirming. This is Monika from Home Credit. Is this a good time to speak for two minutes?
+user: Yes. Yes. 
+agent: As an existing customer, you have a special Loan Against Property offer of up to seventy-five lakh rupees. May I ask you a few brief questions to check your preliminary eligibility?
+user: Actually, I have a loan. I need my EMI reduced. 
+user: Can you do that? 
+agent: Understood. Since there is already a loan on this property, our loan transfer specialist is the right person to help, and they will contact you, thank you for your time.

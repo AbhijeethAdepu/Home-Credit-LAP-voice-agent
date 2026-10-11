@@ -1,0 +1,29 @@
+agent: Hello, may I speak with Abhijeeth?
+user: Yes. Speaking. 
+agent: Thank you for confirming. This is Monika from Home Credit. Is this a good time to speak for two minutes?
+user: Yes. Yes. 
+agent: As an existing customer, you have a special Loan Against Property offer of up to seventy-five lakh rupees. May I ask you a few brief questions to check your preliminary eligibility?
+user: Yeah. Make it quick. 
+agent: What type of property is it?
+user: Residential. 
+agent: Is it in your sole name, or jointly 
+user: Yet 
+agent: owned?
+user: Yes. 
+agent: Is it in your sole name, or jointly owned?
+user: I own it. 
+user: With my wife. 
+agent: Are the original property documents available for verification?
+user: Yes. Yes. 
+agent: How much loan amount are you looking for?
+user: Now seventy five lakhs. 
+agent: Are you salaried or self-employed?
+user: Salary and I get credited in my bank account every month. 
+agent: What is the approximate current market value of the property?
+user: One point five crore 
+agent: For how many years would you like the loan?
+user: NDAs. 
+agent: For 
+user: Twenty years. 
+agent: how many years would you 
+agent: I'm sorry, but the tenure for this offer must be between three and fifteen years, so you do not meet the criteria for this offer at this time, and thank you for your time.

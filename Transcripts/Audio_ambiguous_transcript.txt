@@ -1,0 +1,32 @@
+agent: Hello, may I speak with Abhijeeth?
+user: Yes. Speaking. 
+agent: Thank you for confirming. This is Monika from Home Credit. Is this a good time to speak for two minutes?
+user: Go on. 
+agent: As an existing customer, you have a special Loan Against Property offer of up to seventy-five lakh rupees. May I ask you a few brief questions to check your preliminary eligibility?
+user: Yeah. You can ask, but make it quick. 
+agent: What type of property is it?
+user: (unintelligible audio)
+agent: Sorry, could you please repeat that?
+user: Commercial property. 
+agent: Is it in your sole name, or jointly owned?
+user: Yeah. Yeah. It is in my school name. 
+agent: Is the property in your sole name, or jointly owned?
+user: It is in my soul name. 
+agent: Are the original property documents available for verification?
+user: What what documents do you need? 
+agent: Original property documents are needed for 
+user: Wait. Wait. What? 
+user: What what actually doc document do we need? 
+user: Like, stamp paper or any Xerox 
+agent: Original property documents are required for verification. Are they available?
+user: Yes. 
+agent: How much loan amount are you looking for?
+user: Alex, twenty five lakhs, 
+agent: Are you salaried or self-employed?
+user: Salad and I get credited My salary in my bank. 
+agent: What is the approximate current market value of the property?
+user: Relax. Fifty lakhs. 
+agent: For how many years would you like the loan?
+user: Oh, yes. Twelve years 
+agent: Thank you for sharing those details. Based on what you have told me, you meet the basic criteria for this offer, and a senior loan expert will contact you to discuss the next steps and the exact interest rate.
+user: Okay. Thank you. 
