@@ -19,8 +19,7 @@ An AI voice agent that phones existing Home Credit customers about a pre-approve
 9. [Test Scenarios](#test-scenarios)
 10. [Setup](#setup)
 11. [Repository Structure](#repository-structure)
-12. [Limitations](#limitations)
-13. [Evidence](#evidence)
+12. [Evidence](#evidence)
 
 ---
 
@@ -178,7 +177,7 @@ Calls that pass all rules are marked for human review rather than auto-approved.
 
 Each scenario was run as a recorded call using a written script.
 
-| # | Scenario | Expected outcome |
+| S.No.| Scenario | Expected outcome |
 |---|---|---|
 | 1 | Eligible customer | All seven items collected, handoff to loan expert |
 | 2 | Agricultural property | Immediate disqualification |
@@ -229,16 +228,7 @@ Home-Credit-LAP-voice-agent/
 └── Brief_Test_Results/       # Summary of test outcomes
 ```
 
-## Limitations
-
-- The agent performs preliminary screening, not final loan approval.
-- Speech recognition errors can change how an answer is interpreted, so ambiguous or incomplete calls need manual review.
-- The evaluator is keyword-based. It does not parse Hindi or Hinglish spoken numbers (such as "pachhattar lakh") or phrases like "half a crore" and "three and a half years".
-- A range like "70 to 80 lakh" is read using only the last number that has a unit.
-- A loan cap decision is read only from the reply right after the offer, so a later change of mind is not captured.
-- "Mostly bank, some cash" is treated as unclear in the evaluator, even though the live agent asks a clarifying question.
-- The agent speaks English only.
-- The workflow depends on correctly configured webhook and Google Sheets credentials.
+ 
 
 ## Evidence
 
